@@ -9,42 +9,37 @@
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         .container { max-width: 1200px; margin: auto; }
         header { text-align: center; margin-bottom: 40px; }
-        
         .search-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 40px; }
-        input { padding: 12px 25px; border-radius: 30px; border: none; width: 100%; max-width: 500px; background: #334155; color: white; font-size: 16px; outline: none; border: 1px solid #475569; }
+        input { padding: 12px 25px; border-radius: 30px; border: 1px solid #475569; width: 100%; max-width: 500px; background: #334155; color: white; outline: none; }
         .filters { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .filter-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; transition: 0.3s; }
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; transition: 0.3s; border: 1px solid #334155; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
-        
-        .card-img { width: 100%; height: 200px; object-fit: cover; background: #111; border-bottom: 1px solid #334155; }
+        .card:hover { transform: translateY(-10px); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; background: #111; }
         .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
         .card-tag { font-size: 0.7rem; background: #334155; padding: 4px 10px; border-radius: 5px; color: var(--primary); font-weight: bold; width: fit-content; }
         .card-title { margin: 10px 0; font-size: 1.1rem; color: #fff; }
-        .prompt-preview { font-size: 0.8rem; color: #94a3b8; background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 15px; height: 45px; overflow: hidden; }
-        
-        .copy-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: auto; }
-        .copy-btn:hover { background: #2563eb; }
+        .prompt-preview { font-size: 0.8rem; color: #94a3b8; background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 15px; height: 45px; overflow-y: auto; }
+        .copy-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">🎨 YemenRat Prompts Gallery</h1>
-        <p style="color: #94a3b8;">تصفح، عاين، وانسخ أفضل أوامر الصور بضغطة واحدة</p>
+        <h1>🎨 YemenRat Prompts Gallery</h1>
+        <p style="color: #94a3b8;">معرض أوامر متطابق مع الصور</p>
     </header>
 
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="ابحث عن أمر (أسد، خيال، كرتون)...">
+        <input type="text" id="searchInput" placeholder="ابحث عن (أسد، قط، فضاء)...">
         <div class="filters">
             <button class="filter-btn active" onclick="filterData('الكل')">الكل</button>
             <button class="filter-btn" onclick="filterData('واقعي')">واقعي</button>
             <button class="filter-btn" onclick="filterData('كرتوني')">كرتوني</button>
-            <button class="filter-btn" onclick="filterData('خيالي')">خيالي</button>
+            <button class="filter-btn" onclick="filterData('فضاء')">فضاء</button>
         </div>
     </div>
 
@@ -52,35 +47,37 @@
 </div>
 
 <script>
+    // بيانات دقيقة ومختارة
     const promptsData = [
-        // واقعي
-        { category: "واقعي", title: "بورتريه أسد مهيب", text: "Majestic lion portrait, cinematic lighting, hyper-realistic, 8k, extreme detail on fur.", img: "https://images.unsplash.com/photo-1614027126733-75778caaa600?w=500" },
-        { category: "واقعي", title: "نمر في المطر", text: "Tiger walking through rainforest in the rain, ultra-realistic, water droplets on fur, 8k.", img: "https://images.unsplash.com/photo-1508197149814-0cc02e8b7f74?w=500" },
-        { category: "واقعي", title: "حصان عربي أصيل", text: "Purebred Arabian horse galloping on a beach at sunset, spray of water, cinematic.", img: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=500" },
-        { category: "واقعي", title: "صقر في السماء", text: "Golden eagle in mid-flight, blue sky background, National Geographic style, sharp focus.", img: "https://images.unsplash.com/photo-1516617442634-75371039cb3a?w=500" },
-        
-        // كرتوني
-        { category: "كرتوني", title: "ثعلب بأسلوب ديزني", text: "Cute baby fox, Disney style, big expressive eyes, 3d render, soft colors, Pixar aesthetic.", img: "https://images.unsplash.com/photo-1516934024742-b461fcc47632?w=500" },
-        { category: "كرتوني", title: "تنين صغير سحري", text: "Tiny baby dragon breathing bubbles, 3D render, vibrant colors, Unreal Engine 5 style.", img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" },
-        { category: "كرتوني", title: "رائد فضاء أرنب", text: "Rabbit in a spacesuit on the moon, cute cartoon style, vector art, bright colors.", img: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=500" },
-
-        // خيالي
-        { category: "خيالي", title: "مدينة المستقبل", text: "Cyberpunk city with neon lights, raining, futuristic cars, high detail, 8k, blade runner style.", img: "https://images.unsplash.com/photo-1605142859862-978be7eba909?w=500" },
-        { category: "خيالي", title: "ذئب ميكانيكي", text: "Mechanical wolf made of gears and metal, glowing blue eyes, steampunk style, intricate.", img: "https://images.unsplash.com/photo-1560942485-b2a11cc13456?w=500" }
+        { category: "واقعي", title: "أسد أفريقي مهيب", text: "Majestic African lion, cinematic lighting, 8k, hyper-detailed fur.", keyword: "lion" },
+        { category: "واقعي", title: "نمر في الغابة", text: "Tiger in the jungle, raining, high detail, realistic textures.", keyword: "tiger" },
+        { category: "واقعي", title: "حصان أبيض سريع", text: "White horse running on beach, water splashes, sunset lighting.", keyword: "white-horse" },
+        { category: "واقعي", title: "بومة في الليل", text: "Owl eyes close up, night forest, soft moonlight, sharp focus.", keyword: "owl" },
+        { category: "كرتوني", title: "ثعلب بأسلوب بيكسار", text: "Cute baby fox, 3D render, Pixar style, soft colors, big eyes.", keyword: "fox-cartoon" },
+        { category: "فضاء", title: "رائد فضاء على المريخ", text: "Astronaut on Mars, red dust, futuristic suit, cinematic stars.", keyword: "astronaut" },
+        { category: "فضاء", title: "مجرة ملونة", text: "Nebula galaxy, vibrant colors, cosmic dust, deep space, 8k.", keyword: "galaxy" },
+        { category: "واقعي", title: "قط سيامي لطيف", text: "Siamese cat, blue eyes, sitting on carpet, indoor lighting.", keyword: "siamese-cat" },
+        { category: "واقعي", title: "عقاب في السماء", text: "Eagle flying, blue sky, wide wings, professional photography.", keyword: "eagle" },
+        { category: "كرتوني", title: "تنين صغير سحري", text: "Little baby dragon, fire breath, 3D character design, cute.", keyword: "dragon" }
     ];
 
-    // توليد 100 أمر من البيانات الأساسية
+    // توليد 100 أمر مع ضمان مطابقة الصورة للكلمة الدلالية
     const fullData = [];
     for(let i=0; i<100; i++) {
         let base = promptsData[i % promptsData.length];
-        fullData.push({...base, title: `${base.title} #${i+1}`});
+        fullData.push({
+            ...base,
+            title: `${base.title} #${i+1}`,
+            // استخدام رابط خدمة الصور بناءً على الكلمة الدلالية لضمان المطابقة
+            img: `https://source.unsplash.com/featured/?${base.keyword}&sig=${i}`
+        });
     }
 
     function render(data) {
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = data.map(p => `
             <div class="card">
-                <img src="${p.img}" class="card-img" loading="lazy">
+                <img src="${p.img}" class="card-img" alt="Prompt Image">
                 <div class="card-content">
                     <span class="card-tag">${p.category}</span>
                     <h3 class="card-title">${p.title}</h3>
@@ -91,6 +88,7 @@
         `).join('');
     }
 
+    // نفس وظائف الفلترة والبحث السابقة
     function filterData(cat) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         event.target.classList.add('active');
@@ -106,10 +104,9 @@
 
     function copyText(text, btn) {
         navigator.clipboard.writeText(text);
-        const old = btn.innerText;
         btn.innerText = "تم النسخ! ✓";
         btn.style.background = "#10b981";
-        setTimeout(() => { btn.innerText = old; btn.style.background = "#3b82f6"; }, 2000);
+        setTimeout(() => { btn.innerText = "نسخ الأمر 📋"; btn.style.background = "#3b82f6"; }, 2000);
     }
 
     render(fullData);
