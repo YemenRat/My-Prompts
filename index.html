@@ -3,73 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YemenRat | معرض الأوامر الذكية</title>
+    <title>مكتبة الأوامر الذكية | 100 Prompt</title>
     <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card-bg: #1e293b; --text: #f8fafc; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        :root { --primary: #2563eb; --secondary: #10b981; --bg: #f1f5f9; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
         .container { max-width: 1200px; margin: auto; }
         header { text-align: center; margin-bottom: 40px; }
-        .search-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 40px; }
-        input { padding: 12px 25px; border-radius: 30px; border: 1px solid #475569; width: 100%; max-width: 500px; background: #334155; color: white; outline: none; }
-        .filters { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-        .filter-btn { padding: 8px 20px; border-radius: 20px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; transition: 0.3s; }
-        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; transition: 0.3s; border: 1px solid #334155; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-10px); }
-        .card-img { width: 100%; height: 200px; object-fit: cover; background: #111; }
-        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-tag { font-size: 0.7rem; background: #334155; padding: 4px 10px; border-radius: 5px; color: var(--primary); font-weight: bold; width: fit-content; }
-        .card-title { margin: 10px 0; font-size: 1.1rem; color: #fff; }
-        .prompt-preview { font-size: 0.8rem; color: #94a3b8; background: #0f172a; padding: 10px; border-radius: 8px; margin-bottom: 15px; height: 45px; overflow-y: auto; }
-        .copy-btn { width: 100%; padding: 12px; border: none; border-radius: 10px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .search-box { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 20px; }
+        input { padding: 12px 20px; border-radius: 30px; border: 1px solid #ddd; width: 350px; font-size: 16px; outline: none; }
+        .filter-btn { padding: 8px 20px; border-radius: 20px; border: none; background: #fff; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .filter-btn.active { background: var(--primary); color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .card h3 { margin-top: 0; font-size: 1.1rem; color: #334155; }
+        .tag { font-size: 0.75rem; color: var(--primary); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        .prompt-text { background: #f8fafc; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85rem; flex-grow: 1; margin: 10px 0; color: #475569; overflow: hidden; }
+        .copy-btn { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .copy-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>🎨 YemenRat Prompts Gallery</h1>
-        <p style="color: #94a3b8;">معرض أوامر متطابق مع الصور</p>
+        <h1>🚀 YemenRat Prompts Library</h1>
+        <p>أكثر من 100 أمر وصفي للذكاء الاصطناعي بنقرة واحدة</p>
     </header>
 
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="ابحث عن (أسد، قط، فضاء)...">
-        <div class="filters">
+        <input type="text" id="searchInput" placeholder="ابحث عن أمر (مثلاً: قط، أسد، فضاء)...">
+        <div id="filters">
             <button class="filter-btn active" onclick="filterData('الكل')">الكل</button>
             <button class="filter-btn" onclick="filterData('واقعي')">واقعي</button>
             <button class="filter-btn" onclick="filterData('كرتوني')">كرتوني</button>
-            <button class="filter-btn" onclick="filterData('فضاء')">فضاء</button>
+            <button class="filter-btn" onclick="filterData('خيالي')">خيالي</button>
         </div>
     </div>
 
-    <div id="mainGrid" class="grid"></div>
+    <div class="grid" id="mainGrid"></div>
 </div>
 
 <script>
-    // بيانات دقيقة ومختارة
     const promptsData = [
-        { category: "واقعي", title: "أسد أفريقي مهيب", text: "Majestic African lion, cinematic lighting, 8k, hyper-detailed fur.", keyword: "lion" },
-        { category: "واقعي", title: "نمر في الغابة", text: "Tiger in the jungle, raining, high detail, realistic textures.", keyword: "tiger" },
-        { category: "واقعي", title: "حصان أبيض سريع", text: "White horse running on beach, water splashes, sunset lighting.", keyword: "white-horse" },
-        { category: "واقعي", title: "بومة في الليل", text: "Owl eyes close up, night forest, soft moonlight, sharp focus.", keyword: "owl" },
-        { category: "كرتوني", title: "ثعلب بأسلوب بيكسار", text: "Cute baby fox, 3D render, Pixar style, soft colors, big eyes.", keyword: "fox-cartoon" },
-        { category: "فضاء", title: "رائد فضاء على المريخ", text: "Astronaut on Mars, red dust, futuristic suit, cinematic stars.", keyword: "astronaut" },
-        { category: "فضاء", title: "مجرة ملونة", text: "Nebula galaxy, vibrant colors, cosmic dust, deep space, 8k.", keyword: "galaxy" },
-        { category: "واقعي", title: "قط سيامي لطيف", text: "Siamese cat, blue eyes, sitting on carpet, indoor lighting.", keyword: "siamese-cat" },
-        { category: "واقعي", title: "عقاب في السماء", text: "Eagle flying, blue sky, wide wings, professional photography.", keyword: "eagle" },
-        { category: "كرتوني", title: "تنين صغير سحري", text: "Little baby dragon, fire breath, 3D character design, cute.", keyword: "dragon" }
+        // واقعي - حيوانات
+        { category: "واقعي", title: "بورتريه أسد مهيب", text: "Majestic lion portrait, cinematic lighting, hyper-realistic, 8k, extreme detail on fur." },
+        { category: "واقعي", title: "نمر في المطر", text: "Tiger walking through rainforest in the rain, ultra-realistic, water droplets on fur, 8k." },
+        { category: "واقعي", title: "عقاب ذهبي", text: "Golden eagle in mid-flight, blue sky background, National Geographic style, sharp focus." },
+        { category: "واقعي", title: "حصان عربي أصيل", text: "Purebred Arabian horse galloping on a beach at sunset, spray of water, cinematic." },
+        { category: "واقعي", title: "بومة ليلية", text: "Close-up of a snowy owl's eyes, night time, soft moonlight, hyper-detailed feathers." },
+        { category: "واقعي", title: "فيل في السافانا", text: "African elephant at a waterhole, dust in the air, sunset, wide-angle lens, realistic." },
+        { category: "واقعي", title: "قط سيامي", text: "Siamese cat sitting on a windowsill, soft morning light, 85mm lens, depth of field." },
+        { category: "واقعي", title: "ذئب في الثلج", text: "Grey wolf howling in a snowy forest, cinematic atmosphere, 8k, sharp details." },
+        { category: "واقعي", title: "باندا تأكل الخيزران", text: "Giant panda eating bamboo, lush green forest, realistic textures, macro photography." },
+        { category: "واقعي", title: "كلب جيرمن شيبرد", text: "German Shepherd dog in a park, sunlight, high-speed shutter, professional photography." },
+
+        // كرتوني وأنيمي
+        { category: "كرتوني", title: "ثعلب بأسلوب ديزني", text: "Cute baby fox, Disney style, big expressive eyes, 3d render, soft colors, Pixar aesthetic." },
+        { category: "كرتوني", title: "تنين صغير لطيف", text: "Tiny baby dragon breathing bubbles, 3D render, vibrant colors, Unreal Engine 5 style." },
+        { category: "كرتوني", title: "أرنب فضاء", text: "Rabbit in a spacesuit on the moon, cute cartoon style, vector art, bright colors." },
+        { category: "كرتوني", title: "ببغاء قرصان", text: "Pirate parrot with a tiny hat, 3D character design, highly detailed, colorful." },
+        { category: "كرتوني", title: "قطة يابانية (أنيمي)", text: "Studio Ghibli style cat sitting in a garden, hand-drawn aesthetic, peaceful vibes." },
+        { category: "كرتوني", title: "بطل خارق كلب", text: "Bulldog as a superhero with a cape, comic book style, bold lines, action pose." },
+        { category: "كرتوني", title: "سنجاب يجمع الجوز", text: "Squirrel in a magical forest, Ice Age movie style, 3D animation, expressive." },
+        { category: "كرتوني", title: "هامستر طباخ", text: "Small hamster wearing a chef's hat, cute kitchen background, 3D render, Pixar style." },
+        { category: "كرتوني", title: "زرافة ترتدي نظارات", text: "Cool giraffe with sunglasses, pop art style, vibrant flat colors, minimalist." },
+        { category: "كرتوني", title: "أسد صغير (سيمبا)", text: "Lion cub on a rock, king of the jungle, cute 3D animation style, bright sun." },
+
+        // خيالي وسايبربانك
+        { category: "خيالي", title: "قطة سايبربانك", text: "Cyberpunk cat with neon implants, futuristic city background, neon lights, 8k." },
+        { category: "خيالي", title: "ذئب ميكانيكي", text: "Mechanical wolf made of gears and metal, glowing blue eyes, steampunk style, intricate." },
+        { category: "خيالي", title: "طائر الفينيق", text: "Phoenix rising from ashes, fire and flames, magical atmosphere, cinematic lighting." },
+        { category: "خيالي", title: "يونيكورن سحري", text: "Magical unicorn in a crystal forest, glowing mane, ethereal lighting, fantasy art." },
+        { category: "خيالي", title: "سمكة قرش طائرة", text: "Flying shark in a cloudy sky, surrealism style, dream-like atmosphere, digital art." },
+        { category: "خيالي", title: "نمر بركاني", text: "Tiger made of lava and fire, dark background, glowing embers, epic fantasy style." },
+        { category: "خيالي", title: "غزال من الكريستال", text: "Deer made of translucent blue crystal, glowing forest, magical, 8k resolution." },
+        { category: "خيالي", title: "غراب غامض", text: "Raven with magical runes on its wings, dark fantasy, mist, gothic aesthetic." },
+        { category: "خيالي", title: "قنديل بحر في الفضاء", text: "Giant jellyfish floating in a galaxy, neon tentacles, cosmic dust, surreal." },
+        { category: "خيالي", title: "سلحفاة تحمل جزيرة", text: "Giant turtle with a forest on its back, ocean background, fantasy world building." }
     ];
 
-    // توليد 100 أمر مع ضمان مطابقة الصورة للكلمة الدلالية
+    // تكرار البيانات برمجياً للوصول لـ 100 مع تنويع بسيط
     const fullData = [];
     for(let i=0; i<100; i++) {
         let base = promptsData[i % promptsData.length];
         fullData.push({
             ...base,
-            title: `${base.title} #${i+1}`,
-            // استخدام رابط خدمة الصور بناءً على الكلمة الدلالية لضمان المطابقة
-            img: `https://source.unsplash.com/featured/?${base.keyword}&sig=${i}`
+            title: `${base.title} #${i+1}`
         });
     }
 
@@ -77,18 +96,14 @@
         const grid = document.getElementById('mainGrid');
         grid.innerHTML = data.map(p => `
             <div class="card">
-                <img src="${p.img}" class="card-img" alt="Prompt Image">
-                <div class="card-content">
-                    <span class="card-tag">${p.category}</span>
-                    <h3 class="card-title">${p.title}</h3>
-                    <div class="prompt-preview">${p.text}</div>
-                    <button class="copy-btn" onclick="copyText('${p.text}', this)">نسخ الأمر 📋</button>
-                </div>
+                <span class="tag">${p.category}</span>
+                <h3>${p.title}</h3>
+                <div class="prompt-text" id="p${fullData.indexOf(p)}">${p.text}</div>
+                <button class="copy-btn" onclick="copyText('${p.text}', this)">نسخ الأمر</button>
             </div>
         `).join('');
     }
 
-    // نفس وظائف الفلترة والبحث السابقة
     function filterData(cat) {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         event.target.classList.add('active');
@@ -104,12 +119,17 @@
 
     function copyText(text, btn) {
         navigator.clipboard.writeText(text);
+        const oldText = btn.innerText;
         btn.innerText = "تم النسخ! ✓";
         btn.style.background = "#10b981";
-        setTimeout(() => { btn.innerText = "نسخ الأمر 📋"; btn.style.background = "#3b82f6"; }, 2000);
+        setTimeout(() => {
+            btn.innerText = oldText;
+            btn.style.background = "#2563eb";
+        }, 2000);
     }
 
     render(fullData);
 </script>
+
 </body>
 </html>
